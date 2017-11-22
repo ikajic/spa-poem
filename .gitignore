@@ -1,0 +1,9 @@
+*~
+*swp
+*swo
+*pyc
+*npz
+*xls
+*doc
+
+src/__pycache__
