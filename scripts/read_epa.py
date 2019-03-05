@@ -19,9 +19,7 @@ import numpy as np
 # save pickled file
 save = True
 
-# source folder containing xls sheets
-data_path = os.path.join(
-        os.pardir, 'data', '')
+data_path = os.path.join(os.pardir, "data")  # source folder containing xls sheets
 
 vocab = dict()        # vocabulary with concepts and epa values
 
@@ -45,13 +43,12 @@ for xls in os.listdir(data_path):
         continue
     print('Processing:', xls)
 
-    wb = xlrd.open_workbook(data_path + xls)
+    wb = xlrd.open_workbook(os.path.join(data_path, xls))
     sh = wb.sheet_by_index(0)
 
     for rownum in range(1, sh.nrows):
         row = sh.row_values(rownum)
-        word = row[0]
-        word = word.replace(' ', '_').upper()
+        word = row[0].replace(' ', '_').upper()
         word = re.sub('[\W]+', '', word)
 
         if row.count('') != 0:
@@ -72,7 +69,13 @@ print('Used ACT EPA profiles for %d words' % nr_act)
 
 if save:
     name = 'epa_dimensions.pkl'
-    fpkl = open(data_path+name, "wb+")
-    pickle.dump(vocab, fpkl)
-    fpkl.close()
-    print('Pickled file saved as: %s' % (data_path+name))
+    file_savepath = os.path.join(data_path, name)
+    with open(file_savepath, 'wb') as fpkl:
+        pickle.dump(vocab, fpkl)
+
+    print('Pickled file saved as: {}'.format(file_savepath))
+
+    print('Testing opening')
+    with open(file_savepath, 'rb') as fpkl:
+        test = pickle.load(fpkl)
+        print('Loaded {} entries'.format(len(test)))

@@ -12,10 +12,14 @@ def get_all_words():
     data_path = os.path.join(
         os.path.dirname(__file__), os.pardir, 'data', 'epa_dimensions.pkl')
 
-    with open(data_path, 'r') as f:
+    print(data_path)
+    with open(data_path, 'rb') as f:
         epa_all = pickle.load(f)
 
     return epa_all.keys()
+
+
+get_all_words()
 
 
 def create_spa_vocabulary(experiment, randomize=True, D=128):
@@ -44,7 +48,8 @@ def create_spa_vocabulary(experiment, randomize=True, D=128):
         for word in words:
             vocab[network].parse(word)
 
-        vocab[network].add('EMPTY', np.zeros(D))
+        vocab[network].add('NO_EMOTION' if network == 'executive' else 'EMPTY',
+                           np.zeros(D))
 
     return vocab
 
@@ -59,7 +64,7 @@ def get_epa_expression(words):
 
     data_path = os.path.join(os.path.dirname(__file__), os.pardir, 'data',
                              'epa_dimensions.pkl')
-    with open(data_path, 'rb+') as f:
+    with open(data_path, 'rb') as f:
         epa_all = pickle.load(f)
 
     epa_subset = {word_epa: epa for word_epa, epa in
@@ -76,12 +81,14 @@ def get_epa_expression(words):
             e, p, a = epa_values[0], epa_values[1], epa_values[2]
         except KeyError:
             if word not in epa_sentences:
-                print('%s does not have EPA value in EPA space' % word)
+                print('{} does not have a tuple value in EPA space.'.format(
+                    word), 'Adding (0,0,0) instead.')
 
         if word in epa_sentences:
             e, p, a = epa_sentences[word]
-        expr = ("%.2f*E+%.2f*P+%.2f*A" % (e, p, a)).replace("+-", "-")
-        keys.append(expr)
+
+        expr = "{:.2f}*E+{:.2f}*P+{:.2f}*A".format(e, p, a)
+        keys.append(expr.replace("+-", "-"))
 
     return keys
 
