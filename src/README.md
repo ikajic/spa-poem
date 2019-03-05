@@ -62,9 +62,14 @@ Query:      MOTHER or CHILD
 ``` 
 To query the emotions of the subject or the object, present input to the query.
 For example, to query emotions of a mother who is shouting at a child, present
-the input: ``` MOTHER*SUBJECT+SHOUT_AT*ACTION+CHILD*OBJECT `` to the sensory
+the input: `MOTHER*SUBJECT+SHOUT_AT*ACTION+CHILD*OBJECT` to the sensory
 network (it might not appear in the cloud), and `MOTHER` to the query network.
 After running simulation for a while, the `episodic` network should come up
 with `SHOUT_AT_S` which can be interpreted as the subject of the action `shout
 at`, and the corresponding emotions of that subject are shown in the executive
 network. To query emotions of a child, present `CHILD` to the query.
+
+### Simulation 6
+In this simulation, we test the model's ability to represent mixed emotions as in a scenario where a person is eating a cake while being on a diet. The assumption is that this might prompt positive emotions (as a result of a tasty cake) and negative emotions (guilt from eating something that's not part of the diet).
+As in simulation 5, we will also use the query network to probe emotional responses.
+First, in the sensory network we type in `CAKE*TASTE` and in the query network we present `TASTE`. We observe positive emotions such as *contentment, happiness* and *pleasure*. Then, in the sensory network we change input to `THOUGHT*OBESITY` (or `THOUGHT*OBESITY+CAKE*TASTE`), and in query `THOUGHT`. The conceptualization network will slowly converge to represent `BINGE_EAT` and the emotional responses will change and also include emotions with negative valence.
